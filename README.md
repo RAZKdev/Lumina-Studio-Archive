@@ -1,76 +1,88 @@
-# Lumina Studio | Browser-Based Video & Audio Editor MVP (NLE)
+# Lumina Studio Archive
 
-A high-performance, dark-themed, professional Non-Linear Editor (NLE) interface inspired by DaVinci Resolve and Adobe Premiere Pro. Built with **React 18**, **TypeScript**, **Tailwind CSS**, **HTML5 Canvas**, and **Web Audio API**.
+> Editor video non-linear (NLE) berbasis browser untuk editing cepat, sepenuhnya berjalan di perangkat pengguna.
 
-All video and audio processing is performed **100% client-side** in the browser without any backend server.
+## 1. Deskripsi Proyek
 
----
+**Lumina Studio Archive** adalah MVP editor video dan audio non-linear yang berjalan di browser. Antarmukanya terinspirasi aplikasi profesional seperti DaVinci Resolve dan Adobe Premiere Pro, tetapi seluruh proses — mulai dari impor media, pemotongan klip, hingga ekspor — dilakukan **100% di sisi klien** tanpa backend dan tanpa mengunggah file ke server.
 
-## ✨ Features & Architecture
+Proyek ini merupakan versi arsip dari eksperimen Lumina Studio sebelum pengembangan dipecah menjadi monorepo yang lebih besar (`Lumina-Studio`).
 
-### 1. Media Bin (Top-Left Panel)
-- **HTML5 File API Drag-and-Drop**: Drop local MP4, WebM, MOV, MP3, WAV, AAC media directly into the app.
-- **Automatic Video Thumbnail Generation**: Extracts poster frames using an offscreen canvas and video element.
-- **Web Audio API Waveform Extraction**: Decodes audio channel data using `AudioContext.decodeAudioData` and samples peaks for instant visualization.
-- **Demo Media Generator**: One-click "Load Demo Media" in the header to synthesize test video reels and audio tracks immediately without needing local files.
-- **Drag Source**: Drag items directly from the Media Bin onto the Timeline tracks.
+## 2. Kenapa Proyek Ini Dibuat
 
-### 2. Preview Monitor (Top-Right Panel)
-- **Synchronized Playback Engine**: Frame-accurate playback loop with `requestAnimationFrame` delta time calculation.
-- **SMPTE Timecode Display**: Real-time `HH:MM:SS:FF` readout at 30 FPS.
-- **Transport Controls**: Rewind to Start, Step Backward (1 frame), Play/Pause (Spacebar), Step Forward (1 frame), Volume, and Fullscreen.
-- **Aspect Ratio Switcher**: Toggle dynamically between 16:9 Landscape, 9:16 Vertical (Shorts/Reels/TikTok), and 1:1 Square formats.
-- **Smooth Scrubbing Sync**: Scrubbing while playing automatically pauses playback and seeks cleanly without stutter.
+Editing video untuk konten pendek sering kali membutuhkan aplikasi desktop yang berat, proses instalasi panjang, atau layanan cloud yang mengharuskan pengguna mengunggah file pribadi. Lumina Studio Archive dibuat untuk menjawab kebutuhan tersebut dengan pendekatan yang lebih ringan:
 
-### 3. High-Performance Canvas Timeline (Bottom Panel)
-- **Canvas Time Ruler**: Virtualized tick marks (seconds and sub-frame ticks) with click-and-drag scrubbing.
-- **Multi-Track Architecture**:
-  - `Track 1 (V1)`: Video track with clip manipulation.
-  - `Track 2 (A1)`: Audio track with real-time waveform visualization.
-- **Non-Destructive Trimming**:
-  - Drag the left edge handle (`In-point`) to adjust start time and source offset.
-  - Drag the right edge handle (`Out-point`) to adjust clip duration.
-  - Visual timecode tooltips during trimming.
-- **Draggable Playhead**: Prominent red needle spanning across tracks with responsive scrubbing.
-- **Razor / Split Tool**: Split any clip at the current playhead position (`C` shortcut or Header Split button).
-- **Track Controls**: Mute (eye/speaker) and Lock (padlock) controls per track.
-- **Smooth Zooming**: Scalable timeline zoom (15px/s to 120px/s) with slider and `+` / `-` buttons.
+- **Langsung di browser:** tidak perlu memasang aplikasi tambahan.
+- **Privasi:** media tetap berada di perangkat pengguna; tidak ada upload ke server.
+- **Cepat untuk eksperimen:** cocok untuk memotong klip, menyusun urutan sederhana, dan mengekspor video pendek.
+- **Pembelajaran:** menjadi wadah eksperimen untuk memahami timeline, sinkronisasi audio-video, Canvas, dan Web Audio API.
 
-### 4. Client-Side Video & Audio Exporter
-- **Frame-by-Frame Compositor**: Renders active video sequence onto an offscreen canvas.
-- **MediaStream & MediaRecorder Engine**: Records canvas frames and audio streams directly into a downloadable video container (`.webm` / `.mp4`).
-- **Export Progress Modal**: Displays real-time progress percentage, frame count, status, and direct one-click download.
+## 3. Fungsi & Fitur Utama
 
----
+1. **Media Bin** — impor file MP4, WebM, MOV, MP3, WAV, dan AAC melalui drag-and-drop; pembuatan thumbnail video otomatis; ekstraksi waveform audio; serta generator media demo.
+2. **Preview Monitor** — pemutaran tersinkronisasi, tampilan timecode SMPTE (`HH:MM:SS:FF`), kontrol transport (play/pause, maju/mundur satu frame, volume, fullscreen), dan pilihan rasio aspek 16:9, 9:16, serta 1:1.
+3. **Timeline Berbasis Canvas** — ruler waktu, dua track (video dan audio), trimming non-destruktif pada in/out point, playhead yang dapat digeser, alat split/razor, mute/lock per track, dan zoom timeline.
+4. **Ekspor Video Client-Side** — komposisi frame ke canvas offscreen, perekaman menggunakan `MediaStream` dan `MediaRecorder`, modal progres ekspor, dan unduhan langsung file hasil.
+5. **Keyboard Shortcuts** — `Space` untuk play/pause, panah kiri/kanan untuk maju/mundur satu frame, `Home` untuk kembali ke awal, `Delete`/`Backspace` untuk menghapus klip, dan tombol split.
 
-## ⌨️ Keyboard Shortcuts
+## 4. Bahasa Pemrograman & Teknologi
 
-| Shortcut | Action |
-|---|---|
-| `Space` | Play / Pause playback |
-| `←` (Left Arrow) | Step backward 1 frame (1/30s) |
-| `→` (Right Arrow) | Step forward 1 frame (1/30s) |
-| `Home` | Rewind playhead to start (00:00:00:00) |
-| `Delete` / `Backspace` | Delete selected clip |
-| `Split (C)` button | Split active clip at playhead |
+| Lapisan | Teknologi |
+| --- | --- |
+| Bahasa utama | TypeScript |
+| Struktur halaman | HTML5 |
+| Styling | CSS3 + Tailwind CSS |
+| UI | React 18 |
+| Build tool | Vite 5 |
+| State management | Zustand |
+| Rendering & media | HTML5 Canvas, Web Audio API, MediaRecorder API |
 
----
+## 5. Struktur Direktori
 
-## 🚀 Running the Application
+```text
+Lumina-Studio-Archive/
+├── App.tsx             # Komponen utama editor dan state aplikasi
+├── main.tsx            # Entry point React
+├── index.html          # Shell HTML
+├── index.css           # Tailwind dan gaya global
+├── start.bat           # Launcher Windows (opsional)
+├── package.json
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+└── vite.config.ts
+```
 
-### Option 1: Double-click Start Script
-Double-click `start.bat` in the root folder.
+## 6. Cara Menjalankan
 
-### Option 2: Command Line
-```powershell
+**Prasyarat:** Node.js 18+ dan npm.
+
+```bash
+npm install
 npm run dev
 ```
-Then open `http://localhost:5173` in your browser.
 
----
+Buka `http://localhost:5173` di browser.
 
-## 📦 Building for Production
-```powershell
+Di Windows, Anda juga dapat menjalankan `start.bat`.
+
+**Build produksi:**
+
+```bash
 npm run build
+npm run preview
 ```
-Generates production-ready, minified assets in `dist/`.
+
+## 7. Pengujian
+
+Repo ini belum memiliki skrip pengujian otomatis. Pengujian dilakukan secara manual melalui alur:
+
+1. Impor media atau gunakan media demo.
+2. Susun klip di timeline, lakukan trim dan split.
+3. Putar preview dan pastikan audio-video tersinkron.
+4. Ekspor video dan periksa hasil unduhan.
+
+## 8. Status & Lisensi
+
+- **Status:** MVP / arsip eksperimen.
+- **Lisensi:** belum ada berkas lisensi di repo. Hubungi pemilik repo untuk penggunaan ulang.
