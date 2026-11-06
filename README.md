@@ -1,70 +1,90 @@
 # Lumina Studio Archive
 
-> Editor video non-linear (NLE) berbasis browser untuk editing cepat, sepenuhnya berjalan di perangkat pengguna.
+> Arsip eksperimen editor video non-linear berbasis browser yang tidak lengkap dan saat ini tidak dapat dijalankan.
 
 ## 1. Deskripsi Proyek
 
-**Lumina Studio Archive** adalah MVP editor video dan audio non-linear yang berjalan di browser. Antarmukanya terinspirasi aplikasi profesional seperti DaVinci Resolve dan Adobe Premiere Pro, tetapi seluruh proses — mulai dari impor media, pemotongan klip, hingga ekspor — dilakukan **100% di sisi klien** tanpa backend dan tanpa mengunggah file ke server.
+**Lumina Studio Archive** adalah snapshot arsip dari eksperimen awal editor video dan audio non-linear. Repo ini menyimpan shell antarmuka React (`App.tsx`), entry point (`main.tsx`), konfigurasi Vite/Tailwind/TypeScript, dan CSS global.
 
-Proyek ini merupakan versi arsip dari eksperimen Lumina Studio sebelum pengembangan dipecah menjadi monorepo yang lebih besar (`Lumina-Studio`).
+Repo ini **bukan** aplikasi yang siap dijalankan. Komponen yang diimpor oleh `App.tsx` tidak ada di repo, sehingga halaman editor tidak dapat dirender. Dokumentasi ini menjelaskan isi arsip dan batasannya, bukan fitur yang sudah berfungsi.
 
 ## 2. Kenapa Proyek Ini Dibuat
 
-Editing video untuk konten pendek sering kali membutuhkan aplikasi desktop yang berat, proses instalasi panjang, atau layanan cloud yang mengharuskan pengguna mengunggah file pribadi. Lumina Studio Archive dibuat untuk menjawab kebutuhan tersebut dengan pendekatan yang lebih ringan:
+Eksperimen ini dibuat untuk mempelajari konsep editor video berbasis browser:
 
-- **Langsung di browser:** tidak perlu memasang aplikasi tambahan.
-- **Privasi:** media tetap berada di perangkat pengguna; tidak ada upload ke server.
-- **Cepat untuk eksperimen:** cocok untuk memotong klip, menyusun urutan sederhana, dan mengekspor video pendek.
-- **Pembelajaran:** menjadi wadah eksperimen untuk memahami timeline, sinkronisasi audio-video, Canvas, dan Web Audio API.
+- **Langsung di browser:** tanpa aplikasi desktop dan tanpa backend.
+- **Privasi:** media diproses di perangkat pengguna, bukan diunggah ke server.
+- **Pembelajaran:** eksplorasi timeline, sinkronisasi audio-video, Canvas, Web Audio API, dan MediaRecorder.
 
-## 3. Fungsi & Fitur Utama
+Fitur-fitur tersebut adalah tujuan eksperimen, bukan implementasi yang tersedia di repo ini. Setelah pengembangan dipindahkan ke proyek `Lumina-Studio`, repo ini diarsipkan sebagai catatan sejarah.
 
-1. **Media Bin** — impor file MP4, WebM, MOV, MP3, WAV, dan AAC melalui drag-and-drop; pembuatan thumbnail video otomatis; ekstraksi waveform audio; serta generator media demo.
-2. **Preview Monitor** — pemutaran tersinkronisasi, tampilan timecode SMPTE (`HH:MM:SS:FF`), kontrol transport (play/pause, maju/mundur satu frame, volume, fullscreen), dan pilihan rasio aspek 16:9, 9:16, serta 1:1.
-3. **Timeline Berbasis Canvas** — ruler waktu, dua track (video dan audio), trimming non-destruktif pada in/out point, playhead yang dapat digeser, alat split/razor, mute/lock per track, dan zoom timeline.
-4. **Ekspor Video Client-Side** — komposisi frame ke canvas offscreen, perekaman menggunakan `MediaStream` dan `MediaRecorder`, modal progres ekspor, dan unduhan langsung file hasil.
-5. **Keyboard Shortcuts** — `Space` untuk play/pause, panah kiri/kanan untuk maju/mundur satu frame, `Home` untuk kembali ke awal, `Delete`/`Backspace` untuk menghapus klip, dan tombol split.
+## 3. Status Implementasi
+
+**Yang tersedia:**
+
+- `App.tsx` — shell UI yang mengimpor komponen editor.
+- `main.tsx` — entry point React.
+- `index.html`, `index.css`, serta konfigurasi Vite, Tailwind, PostCSS, dan TypeScript.
+- `start.bat` — launcher Windows dengan path Node yang di-hardcode.
+
+**Yang tidak tersedia:**
+
+- `components/Header`, `components/MediaBin`, `components/PreviewMonitor`, `components/Timeline/Timeline`, dan `components/ExportModal` yang diimpor `App.tsx`.
+- Folder `src/` yang dirujuk oleh `index.html` dan `tsconfig.json`.
+- Implementasi media bin, preview monitor, timeline, ekspor video, dan keyboard shortcuts.
+
+**Akibatnya:**
+
+- Halaman `npm run dev` tidak dapat dimuat karena import komponen tidak ditemukan.
+- `npm run build` gagal karena TypeScript tidak menemukan komponen dan folder `src/`.
+- `index.html` memuat `/src/main.tsx`, sedangkan `main.tsx` berada di root repo.
+
+Repo ini hanya memiliki 12 file yang tercatat di Git.
 
 ## 4. Bahasa Pemrograman & Teknologi
 
-| Lapisan | Teknologi |
-| --- | --- |
-| Bahasa utama | TypeScript |
-| Struktur halaman | HTML5 |
-| Styling | CSS3 + Tailwind CSS |
-| UI | React 18 |
-| Build tool | Vite 5 |
-| State management | Zustand |
-| Rendering & media | HTML5 Canvas, Web Audio API, MediaRecorder API |
+| Lapisan | Teknologi | Catatan |
+| --- | --- | --- |
+| Bahasa utama | TypeScript | Dikonfigurasi di repo |
+| UI | React 18 | Dideklarasikan di `package.json` |
+| Build tool | Vite 5 | Dikonfigurasi, tetapi build gagal |
+| Styling | Tailwind CSS 3 | Dikonfigurasi |
+| State management | Zustand | Dideklarasikan; penggunaan aktual tidak dapat diverifikasi |
+| Ikon | Lucide React | Dideklarasikan; penggunaan aktual tidak dapat diverifikasi |
+| Rendering & media | Canvas, Web Audio API, MediaRecorder | Hanya disebut di shell/status bar; implementasi tidak ada |
 
 ## 5. Struktur Direktori
 
 ```text
 Lumina-Studio-Archive/
-├── App.tsx             # Komponen utama editor dan state aplikasi
-├── main.tsx            # Entry point React
-├── index.html          # Shell HTML
-├── index.css           # Tailwind dan gaya global
-├── start.bat           # Launcher Windows (opsional)
+├── App.tsx
+├── main.tsx
+├── index.html
+├── index.css
+├── start.bat
 ├── package.json
+├── package-lock.json
 ├── tailwind.config.js
 ├── postcss.config.js
 ├── tsconfig.json
-└── vite.config.ts
+├── vite.config.ts
+└── README.md
 ```
+
+Tidak ada folder `components/` atau `src/` di repo.
 
 ## 6. Cara Menjalankan
 
-**Prasyarat:** Node.js 18+ dan npm.
+**Prasyarat:** Node.js 18+ dan npm. Repo tidak menetapkan batas versi Node di `package.json`.
+
+Perintah yang dimaksudkan:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Buka `http://localhost:5173` di browser.
-
-Di Windows, Anda juga dapat menjalankan `start.bat`.
+`npm install` hanya memasang dependensi; `npm run dev` tidak dapat memuat halaman karena komponen yang diimpor tidak ada. `start.bat` juga tidak menjamin berhasil karena menetapkan path `%LOCALAPPDATA%\Programs\node-v20.18.0-win-x64` secara hardcoded.
 
 **Build produksi:**
 
@@ -73,16 +93,15 @@ npm run build
 npm run preview
 ```
 
+Build produksi tidak dapat diselesaikan sampai komponen yang hilang ditambahkan dan struktur `src/` diperbaiki.
+
+**Untuk memulihkan proyek:** tambahkan komponen yang hilang, pindahkan `main.tsx` ke `src/main.tsx` atau ubah `index.html`, lalu sesuaikan `include` di `tsconfig.json`. Perbaikan tersebut belum dilakukan di repo ini.
+
 ## 7. Pengujian
 
-Repo ini belum memiliki skrip pengujian otomatis. Pengujian dilakukan secara manual melalui alur:
-
-1. Impor media atau gunakan media demo.
-2. Susun klip di timeline, lakukan trim dan split.
-3. Putar preview dan pastikan audio-video tersinkron.
-4. Ekspor video dan periksa hasil unduhan.
+Tidak ada skrip pengujian otomatis di `package.json`. Pengujian manual juga belum dapat diselesaikan karena aplikasi belum dapat di-build atau dijalankan.
 
 ## 8. Status & Lisensi
 
-- **Status:** MVP / arsip eksperimen.
+- **Status:** arsip tidak lengkap; tidak dapat dijalankan.
 - **Lisensi:** belum ada berkas lisensi di repo. Hubungi pemilik repo untuk penggunaan ulang.
